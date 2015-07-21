@@ -6,12 +6,10 @@ counter = {}
 
 @asyncio.coroutine
 def handle(request):
-    asyncio.sleep(0.5)
-    key = request.match_info.get('key', "default")
-    if key in counter:
-        counter[key] += 1
-    else:
-        counter[key] = 1
+    yield from asyncio.sleep(0.5)
+    key = request.match_info.get('key')
+    val = counter.set_default(key, 0)
+    counter[key] = val + 1
     return web.Response(body=str(counter[key]).encode())
 
 
